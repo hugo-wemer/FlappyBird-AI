@@ -1,0 +1,83 @@
+
+[NEAT]
+fitness_criterion     = max                               => O critério é maximizar a pontuação do pássaro
+fitness_threshold     = 1000                              => Considerei pontuação 1000 = imortal. Quero portanto a config do indivíduo que chegou no 1000
+pop_size              = 100                               => Tamanho da população daquela geração.
+reset_on_extinction   = False                             => Indivíduos muito semelhantes são categorizados como sendo da mesma espécie. Se todos os indivíduos 
+                                                             daquela espécie forem eliminados eu não quero que ela seja extinta (e uma outra do zero seja criada), mas sim que ele me retorne um erro para que eu tente ajustar os parâmetros. -> Evitar loop infinito.
+
+[DefaultGenome]
+# node activation options                                 => Funções de ativação do nó de output
+activation_default      = tanh                            => Função de tangente hiperbólica
+activation_mutate_rate  = 0.0                             => Sem testar nenhuma outra função
+activation_options      = tanh                            => Sempre utilizar a tangente hiperbólica como função de ativação
+
+# node aggregation options                                => Funções das conexões
+aggregation_default     = sum                             => Somar valor da conexão (peso) ao valor do nó de entrada 
+aggregation_mutate_rate = 0.0                             => Sem mutações, sempre somar
+aggregation_options     = sum                             => Sempre utilizar a soma
+
+# node bias options                                       => Valor aplicado ao nó de output
+bias_init_mean          = 0.0                             => Média geral
+bias_init_stdev         = 1.0                             => Desvio padrão
+bias_max_value          = 30.0                            => Valor máximo
+bias_min_value          = -30.0                           => Valor mínimo
+bias_mutate_power       = 0.5                             => Proporcionalidade da mutação
+bias_mutate_rate        = 0.7                             => Chance de mutação de um pássaro para outro
+bias_replace_rate       = 0.1                             => Chance de criar um novo valor aleatório ao invés de fazer a conta com o Bias criado
+
+# genome compatibility options                            => Qual o nível se semelhança ele vai procurar pra separar os indivíduos em espécies
+compatibility_disjoint_coefficient = 1.0
+compatibility_weight_coefficient   = 0.5
+
+# connection add/remove rates                             => Probabilidade de ele excluir ou adicionar uma conexão do nó de entrada ao nó de saída
+conn_add_prob           = 0.5
+conn_delete_prob        = 0.5
+
+# connection enable options                               => Conexão existente = conexão ativa
+enabled_default         = True                            => Por padrão todas as conexões existentes estão ativas
+enabled_mutate_rate     = 0.01                            => A probabilidade de esse fato mudar é de 1%
+
+feed_forward            = True                            => Fluxo padrão sempre do input para o output
+initial_connection      = full                            => Inicialmente todos os nós estarão conectados na próxima camada
+
+# node add/remove rates                                   => Probabilidade de ele excluir ou adicionar um nó novo
+node_add_prob           = 0.2
+node_delete_prob        = 0.2
+
+# network parameters                                      => Definição de quantos nós temos por indivíduo
+num_hidden              = 0                               => 0 nós intermediários
+num_inputs              = 3                               => 3 nós de entrada: distância até o chão, distância até o cano do topo, distância até o cano da base
+num_outputs             = 1                               => 1 nó de saída: Pular ou não pular
+
+# node response options                                   => Antes de somar o valor do nó de output ao Bias, esse valor é multiplicado. Aqui são definidos parâmetros para  
+                                                             esse coeficiente de multiplicação assim como na criação do coeficiente do Bias
+response_init_mean      = 1.0                             => Como a média é 1 e
+response_init_stdev     = 0.0                             => o desvio padrão é 0, essa funcionalidade é ignorada, pois multiplica por 1 o tempo todo.
+response_max_value      = 30.0
+response_min_value      = -30.0
+response_mutate_power   = 0.0
+response_mutate_rate    = 0.0
+response_replace_rate   = 0.0
+
+# connection weight options                               => A mesma parametrização do Bias e do fator multiplicativo explicado acima agora é definido para o peso
+                                                             (conexões)
+weight_init_mean        = 0.0
+weight_init_stdev       = 1.0
+weight_max_value        = 30
+weight_min_value        = -30
+weight_mutate_power     = 0.5
+weight_mutate_rate      = 0.8
+weight_replace_rate     = 0.1
+
+[DefaultSpeciesSet]
+compatibility_threshold = 3.0                             => Qual o nível se semelhança ele vai procurar pra separar os indivíduos em espécies
+
+[DefaultStagnation]
+species_fitness_func = max                                => A função das espécies também é maximizar o score
+max_stagnation       = 20                                 => Se a mesma espécie não conseguir evoluir durante 20 gerações, extingue a espécie
+species_elitism      = 2                                  => Mantém sempre pelo menos 2 espécies, mesmo que todas fiquem estagnadas.
+
+[DefaultReproduction]
+elitism            = 2                                    => Em cada uma das espécies eu posso pegar 2 pássaros e passá-los para próxima geração sem mutação nenhuma.
+survival_threshold = 0.2                                  => No máximo 20% dos indivíduos de uma espécie pode passar pra próxima geração
